@@ -77,11 +77,12 @@ background:linear-gradient(90deg,transparent 49%,#c9d3ee 49% 51%,transparent 51%
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<style>.map{z-index:0;isolation:isolate;height:240px;cursor:grab}.map em{z-index:500}.maphint{font-size:12px;color:#46517a;margin:4px 0 0}.leaflet-container{font-family:inherit}</style>
+<style>.map{z-index:0;isolation:isolate;height:240px;cursor:grab}.map em{z-index:500}.maphint{font-size:12px;color:#46517a;margin:4px 0 0}.leaflet-container{font-family:inherit}.call{flex-direction:row;gap:10px}.call .grp{flex:1;display:flex;flex-direction:column;gap:4px}.call .num{font-size:12px;color:var(--mute);text-align:center;direction:ltr}.call .acts{display:flex;gap:6px}.call .acts a{flex:1;padding:9px 4px;font-size:14px;direction:rtl}.call .acts a.wa{background:var(--ok)}.app{padding-bottom:104px}
+</style>
 </head>
 <body>
 <div class="app" id="app"></div>
-<div class="call"><a href="tel:01142042670">اتصال 01142042670</a><a href="tel:01033048158">اتصال 01033048158</a></div>
+<div class="call"><div class="grp"><span class="num">01142042670</span><div class="acts"><a class="wa" href="https://wa.me/201142042670?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%B9%D8%A7%D9%8A%D8%B2%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%85%D9%86%20%D9%81%D9%88%D8%B1%D9%8A%D8%B1%D8%A7" target="_blank" rel="noopener">واتساب</a><a href="tel:01142042670">اتصال</a></div></div><div class="grp"><span class="num">01033048158</span><div class="acts"><a class="wa" href="https://wa.me/201033048158?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%B9%D8%A7%D9%8A%D8%B2%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%85%D9%86%20%D9%81%D9%88%D8%B1%D9%8A%D8%B1%D8%A7" target="_blank" rel="noopener">واتساب</a><a href="tel:01033048158">اتصال</a></div></div></div>
 <script>
 var PHONES=["01142042670","01033048158"],MAXH=3;
 var SHOPS=["مطعم الأمل","حلواني السعادة","سوبر ماركت النور","صيدلية الشفاء"];

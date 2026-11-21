@@ -1,4 +1,4 @@
-const CACHE = "forera-v6";
+const CACHE = "forera-v7";
 const CORE = ["./", "./index.html", "./offline.html", "./manifest.webmanifest", "./favicon.ico",
   "./icon-192.png", "./icon-512.png", "./maskable-512.png", "./apple-touch-icon.png"];
 
