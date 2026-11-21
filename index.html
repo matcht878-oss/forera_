@@ -75,6 +75,9 @@ background:linear-gradient(90deg,transparent 49%,#c9d3ee 49% 51%,transparent 51%
 .call a{flex:1;background:var(--blue);color:#fff;text-decoration:none;text-align:center;border-radius:12px;padding:10px;font-weight:700;font-size:15px;direction:ltr}
 .empty{text-align:center;color:var(--mute);padding:30px 10px}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>.map{z-index:0;isolation:isolate;height:240px;cursor:grab}.map em{z-index:500}.maphint{font-size:12px;color:#46517a;margin:4px 0 0}.leaflet-container{font-family:inherit}</style>
 </head>
 <body>
 <div class="app" id="app"></div>
@@ -106,10 +109,20 @@ return head()+'<main><div class="status"><span class="dot'+(o.open?'':' off')+'"
 '<button class="svc red" data-go="form" data-t="ride"><b>مشوار</b><span>توكتوك أو موتوسيكل</span></button>'+
 '<button class="svc" data-go="orders"><b>طلباتي</b><span>'+orders.length+' طلب على هذا الجهاز</span></button>'+
 '<button class="svc wide" data-go="owners"><b>لأصحاب المطاعم</b><span>انضم لفوريرا</span></button></div></main>'}
-function mapBox(id,lbl,cls){var p=draft.pts[id],pin="";
-if(p){var x=(p.lng-31.46)/0.08*100,y=(26.80-p.lat)/0.08*100;pin='<div class="pin '+(cls||"")+'" style="left:'+x+'%;top:'+y+'%"></div>'}
-return'<label>'+lbl+'</label><div class="map" data-map="'+id+'" role="button" aria-label="'+lbl+'">'+pin+'<em>خريطة تجريبية – اضغط لتحديد المكان</em></div>'+
+function mapBox(id,lbl,cls){var p=draft.pts[id];
+return'<label>'+lbl+'</label><div class="map" data-mapid="'+id+'" data-mapcls="'+(cls||"")+'" role="application" aria-label="'+lbl+'"></div><div class="maphint">اضغط على الخريطة لتحديد المكان</div>'+
 '<button class="btn ghost sm" style="margin-top:8px" data-loc="'+id+'">موقعي الحالي</button>'+(p?' <span class="tag">تم التحديد</span>':'')}
+var mapView={};
+function initMaps(){var els=document.querySelectorAll("[data-mapid]");
+for(var i=0;i<els.length;i++)(function(el){var id=el.getAttribute("data-mapid"),cls=el.getAttribute("data-mapcls");
+if(typeof L==="undefined"){el.innerHTML='<em>الخريطة تحتاج اتصال بالإنترنت</em>';return}
+var p=draft&&draft.pts&&draft.pts[id],v=mapView[id]||{c:p?[p.lat,p.lng]:[26.76,31.50],z:p?16:14};
+var m=L.map(el,{center:v.c,zoom:v.z,zoomControl:true,attributionControl:true});
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(m);
+if(p)L.marker([p.lat,p.lng],{icon:L.divIcon({className:"",html:'<div class="pin '+cls+'"></div>',iconSize:[0,0]}),interactive:false}).addTo(m);
+m.on("moveend",function(){var c=m.getCenter();mapView[id]={c:[c.lat,c.lng],z:m.getZoom()}});
+m.on("click",function(e){draft.pts[id]={lat:e.latlng.lat,lng:e.latlng.lng};var c=m.getCenter();mapView[id]={c:[c.lat,c.lng],z:m.getZoom()};err="";render()});
+setTimeout(function(){m.invalidateSize()},50)})(els[i])}
 function ident(){return'<label>الاسم</label><input data-k="name" value="'+esc(draft.name)+'" autocomplete="name"><label>رقم الموبايل</label><input data-k="phone" inputmode="numeric" maxlength="11" placeholder="01xxxxxxxxx" value="'+esc(draft.phone)+'" autocomplete="tel">'}
 function form(){var d=draft,t=d.type,b="";
 if(d.step===1)return review();
@@ -141,27 +154,37 @@ if(d.type==="ride")r+='<dt>المركبة</dt><dd>'+d.veh+'</dd><dt>الركوب
 r+='<dt>'+(d.type==="ride"?"الوصول":"التوصيل إلى")+'</dt><dd>'+pt(d.pts.to)+(d.addr?' – '+esc(d.addr):'')+'</dd>';
 if(d.notes)r+='<dt>ملاحظات</dt><dd>'+esc(d.notes)+'</dd>';
 return head("مراجعة الطلب",0)+'<main>'+(o.open?'':'<div class="note">إحنا مقفولين دلوقتي. هنسجّل طلبك وننفّذه أول ما نفتح.</div>')+'<div class="card"><dl class="sum" style="margin:0">'+r+'</dl></div><div class="grid"><button class="btn ghost" data-edit>تعديل</button><button class="btn y" data-confirm>تأكيد الطلب</button></div></main>'}
+function gl(p){return p?"https://maps.google.com/?q="+p.lat.toFixed(6)+","+p.lng.toFixed(6):"—"}
+function waMsg(o){var d=o.data||{},L2=["طلب فوريرا رقم "+o.no,"الخدمة: "+TITLE[o.type],"الاسم: "+o.name,"الموبايل: "+o.phone];
+if(o.type==="delivery")L2.push("الطلب: "+(d.desc||""));
+if(o.type==="buy"){L2.push("الأصناف: "+(d.items||[]).filter(function(i){return i.n.trim()}).map(function(i){return i.q+" × "+i.n}).join("، "));L2.push("الشراء من: "+shopName(d));L2.push("موقع الشراء: "+gl(d.pts&&d.pts.from))}
+if(o.type==="ride"){L2.push("المركبة: "+(d.veh||""));L2.push("نقطة الركوب: "+gl(d.pts&&d.pts.from))}
+L2.push((o.type==="ride"?"نقطة الوصول: ":"موقع التوصيل: ")+gl(d.pts&&d.pts.to));
+if(d.addr)L2.push("العنوان: "+d.addr);if(d.notes)L2.push("ملاحظات: "+d.notes);
+return L2.join("\n")}
 function done(){var o=orders.find(function(x){return x.no===lastNo});if(!o)return home();
-var msg=encodeURIComponent("طلب فوريرا رقم "+o.no+" – "+TITLE[o.type]+" – "+o.name+" "+o.phone);
+var msg=encodeURIComponent(waMsg(o));
 return head("تم استلام طلبك",0)+'<main><div class="card done"><div>رقم طلبك</div><div class="no">#'+o.no+'</div><p>هنتواصل معاك على '+esc(o.phone)+' لتأكيد الطلب.</p></div>'+
 '<a class="btn" style="margin-bottom:10px" href="https://wa.me/2'+PHONES[0]+'?text='+msg+'" target="_blank" rel="noopener">إرسال التفاصيل على واتساب</a><button class="btn ghost" data-go="orders">تابع حالة الطلب</button></main>'}
 function ordersView(){var l=orders.slice().reverse().map(function(o){var s=STAT[o.type];
 return'<div class="card"><div class="ohead"><b>#'+o.no+' – '+TITLE[o.type]+'</b><span class="tag">'+s[o.st]+'</span></div><ul class="steps">'+s.map(function(x,i){return'<li class="'+(i<o.st?'d':i===o.st?'c':'')+'">'+x+'</li>'}).join("")+'</ul>'+
 (o.st<s.length-1?'<button class="btn ghost sm" style="margin-top:10px" data-adv="'+o.no+'">تجربة: انقل للحالة التالية</button>':'')+'</div>'}).join("");
 return head("طلباتي",1)+'<main>'+(l||'<div class="empty">لسه مفيش طلبات على الجهاز ده.</div>')+'</main>'}
+function joinWa(){var js=load("fo_join",[]),j=js[js.length-1];if(!j)return"";
+var m=encodeURIComponent("طلب انضمام لفوريرا\nاسم المحل: "+j.shop+"\nالمسؤول: "+j.owner+"\nالموبايل: "+j.phone);
+return'<a class="btn" style="margin:10px 0" href="https://wa.me/2'+PHONES[0]+'?text='+m+'" target="_blank" rel="noopener">إرسال الطلب على واتساب</a>'}
 function owners(){var sent=draft&&draft.sent;
 return head("لأصحاب المطاعم",1)+'<main><div class="card"><p style="margin-top:0">فوريرا لكل خدمات الدليفري: مطاعم، سوبر ماركت، أدوية، ومشاوير. سجّل محلك وهنراجع طلبك ونتواصل معاك.</p></div>'+
-(sent?'<div class="card done"><b>وصل طلب الانضمام</b><p>هنتواصل معاك بعد المراجعة.</p></div>':
+(sent?'<div class="card done"><b>وصل طلب الانضمام</b><p>هنتواصل معاك بعد المراجعة.</p></div>'+joinWa():
 (err?'<div class="err">'+err+'</div>':'')+'<div class="card"><label>اسم المحل</label><input id="s1"><label>اسم المسؤول</label><input id="s2"><label>الموبايل</label><input id="s3" inputmode="numeric" maxlength="11"><label>النشاط</label><select id="s4"><option>مطعم</option><option>سوبر ماركت</option><option>صيدلية</option><option>أخرى</option></select><label>ساعات العمل</label><input id="s5" placeholder="مثال: من 10 ص إلى 12 ليلًا"></div><button class="btn y" data-join>إرسال طلب الانضمام</button>')+'</main>'}
-function render(){var h={home:home,form:function(){return draft?form():home()},orders:ordersView,owners:owners,done:done}[view]();document.getElementById("app").innerHTML=h}
-document.addEventListener("click",function(e){var t=e.target.closest("button,[data-map]");if(!t)return;var D=t.dataset;
-if(D.map){var r=t.getBoundingClientRect();draft.pts[D.map]={lat:26.80-(e.clientY-r.top)/r.height*0.08,lng:31.46+(e.clientX-r.left)/r.width*0.08};render();return}
+function render(){var h={home:home,form:function(){return draft?form():home()},orders:ordersView,owners:owners,done:done}[view]();document.getElementById("app").innerHTML=h;initMaps()}
+document.addEventListener("click",function(e){var t=e.target.closest("button");if(!t)return;var D=t.dataset;
 if(D.go){if(D.go==="owners")draft={sent:false};go(D.go,D.t);return}
 if(D.quick){var f=draft.items.find(function(i){return!i.n.trim()});if(f)f.n=D.quick;else draft.items.push({n:D.quick,q:"1"});render();return}
 if(D.add!==undefined){draft.items.push({n:"",q:"1"});render();return}
 if(D.veh){draft.veh=D.veh;render();return}
 if(D.loc){if(!navigator.geolocation){err="الموقع غير متاح على هذا الجهاز";render();return}
-navigator.geolocation.getCurrentPosition(function(p){draft.pts[D.loc]={lat:Math.min(26.80,Math.max(26.72,p.coords.latitude)),lng:Math.min(31.54,Math.max(31.46,p.coords.longitude))};err="";render()},function(){err="مقدرناش نحدد موقعك. اضغط على الخريطة لتحديده";render()});return}
+navigator.geolocation.getCurrentPosition(function(p){draft.pts[D.loc]={lat:p.coords.latitude,lng:p.coords.longitude};mapView[D.loc]={c:[p.coords.latitude,p.coords.longitude],z:16};err="";render()},function(){err="مقدرناش نحدد موقعك. اضغط على الخريطة لتحديده";render()},{enableHighAccuracy:true,timeout:15000});return}
 if(D.review!==undefined){err=validate();if(!err)draft.step=1;window.scrollTo(0,0);render();return}
 if(D.edit!==undefined){draft.step=0;render();return}
 if(D.confirm!==undefined){var d=draft,no=String(1000+orders.length+1);
