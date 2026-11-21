@@ -1,0 +1,142 @@
+{
+  "id": "forera-pwa",
+  "name": "فوريرا للدليفري",
+  "short_name": "فوريرا",
+  "description": "تطبيق فوريرا: توصيل طلبات، شراء من المحلات، ومشاوير بخطوات سهلة وتتبع للحالة.",
+  "start_url": "./index.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "portrait",
+  "background_color": "#14307a",
+  "theme_color": "#14307a",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": [
+    "food",
+    "shopping",
+    "lifestyle"
+  ],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "monochrome-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "monochrome"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "home-narrow.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "الصفحة الرئيسية"
+    },
+    {
+      "src": "order-narrow.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "طلب توصيل"
+    },
+    {
+      "src": "home-wide.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "الصفحة الرئيسية على الشاشة الكبيرة"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "توصيل طلب",
+      "short_name": "توصيل",
+      "description": "نوصّل طلبك لحد باب البيت",
+      "url": "./index.html?s=delivery&source=shortcut",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "اطلب حاجة",
+      "short_name": "اطلب",
+      "description": "نشتريها لك ونوصلها",
+      "url": "./index.html?s=buy&source=shortcut",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "مشوار",
+      "short_name": "مشوار",
+      "description": "توكتوك أو موتوسيكل",
+      "url": "./index.html?s=ride&source=shortcut",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "launch_handler": {
+    "client_mode": [
+      "navigate-existing",
+      "auto"
+    ]
+  },
+  "handle_links": "preferred",
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}
