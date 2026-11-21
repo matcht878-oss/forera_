@@ -188,7 +188,7 @@ navigator.geolocation.getCurrentPosition(function(p){draft.pts[D.loc]={lat:p.coo
 if(D.review!==undefined){err=validate();if(!err)draft.step=1;window.scrollTo(0,0);render();return}
 if(D.edit!==undefined){draft.step=0;render();return}
 if(D.confirm!==undefined){var d=draft,no=String(1000+orders.length+1);
-orders.push({no:no,type:d.type,name:d.name,phone:d.phone,at:Date.now(),st:0,data:d});save("fo_orders",orders);lastNo=no;draft=null;go("done");return}
+orders.push({no:no,type:d.type,name:d.name,phone:d.phone,at:Date.now(),st:0,data:d});save("fo_orders",orders);lastNo=no;draft=null;try{window.open("https://wa.me/2"+PHONES[0]+"?text="+encodeURIComponent(waMsg(orders[orders.length-1])),"_blank")}catch(e){}go("done");return}
 if(D.adv){var o=orders.find(function(x){return x.no===D.adv});if(o&&o.st<STAT[o.type].length-1)o.st++;save("fo_orders",orders);render();return}
 if(D.join!==undefined){var v=["s1","s2","s3"].map(function(i){return document.getElementById(i).value.trim()});
 if(!v[0]||!v[1]||!/^01\d{9}$/.test(v[2])){err="اكتب اسم المحل واسم المسؤول ورقم موبايل صحيح (01 + 11 رقم)";render();return}
