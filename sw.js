@@ -1,5 +1,5 @@
-const CACHE = "forera-v11";
-const CORE = ["./", "./index.html", "./offline.html", "./manifest.webmanifest", "./favicon.ico",
+const CACHE = "forera-v12";
+const CORE = ["./", "./index.html", "./offline.html", "./manifest.webmanifest", "./favicon.ico", "./omda-logo.png", "./menu-1.jpg", "./menu-2.jpg",
   "./icon-192.png", "./icon-512.png", "./maskable-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", e => {
