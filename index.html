@@ -102,7 +102,7 @@ details.pks[open]>summary::after{content:"\2212"}
 details.pks>summary .cnt{background:var(--yellow);color:#1a1a1a;border-radius:999px;font-size:14px;padding:0 10px;margin-inline-start:auto}
 .pk{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-top:1px solid var(--line);font-size:18px}
 .pk.on{background:#fff6d6;color:#1a1a1a}
-.pk .nm{flex:1;font-weight:500}
+.pk .nm{flex:1;font-weight:500}.pk .pr{display:block;color:var(--mute);font-size:15px;font-weight:700}.pk.on .pr{color:#5a4500}
 .pk .ctl{display:flex;align-items:center;gap:6px;flex:none;direction:ltr}
 .pk .ctl button{width:42px;height:42px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:24px;font-weight:800;line-height:1;cursor:pointer}
 .pk .ctl button.plus{background:var(--blue);border-color:var(--blue);color:#fff}
@@ -116,26 +116,24 @@ details.pks>summary .cnt{background:var(--yellow);color:#1a1a1a;border-radius:99
 <script>
 var PHONES=["01142042670","01033048158"],MAXH=3;
 var CATS=[{k:"rest",ic:"<svg viewBox=\"0 0 64 64\" aria-hidden=\"true\"><path d=\"M8 28c0-10 11-17 24-17s24 7 24 17z\" fill=\"#f5b800\"/><circle cx=\"22\" cy=\"20\" r=\"1.6\" fill=\"#fff3c2\"/><circle cx=\"34\" cy=\"16.5\" r=\"1.6\" fill=\"#fff3c2\"/><circle cx=\"43\" cy=\"22\" r=\"1.6\" fill=\"#fff3c2\"/><path d=\"M6 31c4 4 8-2 13 1s9-3 13 0 9-3 13 0 8-3 13 0v3H6z\" fill=\"#3aa655\"/><rect x=\"7\" y=\"35\" width=\"50\" height=\"8\" rx=\"4\" fill=\"#7a3b1d\"/><path d=\"M8 46h48c0 7-6 9-12 9H20c-6 0-12-2-12-9z\" fill=\"#f0a31a\"/></svg>",n:"مطاعم",s:"منيو وأوقات التوصيل",shops:["مطعم العمدة"]},{k:"pharm",ic:"<svg viewBox=\"0 0 64 64\" aria-hidden=\"true\"><rect x=\"8\" y=\"8\" width=\"48\" height=\"48\" rx=\"13\" fill=\"#1a8d4f\"/><path d=\"M27 17h10v10h10v10H37v10H27V37H17V27h10z\" fill=\"#fff\"/></svg>",n:"صيدليات",s:"أدوية ومستلزمات",shops:["صيدلية الشفاء"]},{k:"super",ic:"<svg viewBox=\"0 0 64 64\" aria-hidden=\"true\"><path d=\"M6 12h9l7 28h28l6-20H18\" fill=\"none\" stroke=\"#14307a\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"26\" cy=\"51\" r=\"4.5\" fill=\"#14307a\"/><circle cx=\"46\" cy=\"51\" r=\"4.5\" fill=\"#14307a\"/><circle cx=\"29\" cy=\"28\" r=\"6\" fill=\"#c8262d\"/><rect x=\"38\" y=\"22\" width=\"9\" height=\"12\" rx=\"2\" fill=\"#f5b800\"/></svg>",n:"سوبر ماركت",s:"طلبات البيت",shops:["سوبر ماركت النور"]},{k:"perf",ic:"<svg viewBox=\"0 0 64 64\" aria-hidden=\"true\"><rect x=\"26\" y=\"6\" width=\"12\" height=\"9\" rx=\"2\" fill=\"#14307a\"/><rect x=\"29\" y=\"15\" width=\"6\" height=\"6\" fill=\"#9fb3e8\"/><rect x=\"14\" y=\"21\" width=\"36\" height=\"34\" rx=\"10\" fill=\"#c8262d\"/><rect x=\"20\" y=\"28\" width=\"8\" height=\"20\" rx=\"4\" fill=\"#fff\" opacity=\".35\"/><circle cx=\"40\" cy=\"38\" r=\"6\" fill=\"#f5b800\"/><path d=\"M52 10l2 5 5 2-5 2-2 5-2-5-5-2 5-2z\" fill=\"#f5b800\"/></svg>",n:"اكسسوارات وعطور",s:"هدايا وعطور",shops:[]}];
-var MENUS={omda:[
-{t:"المشويات",i:["ربع فراخ","نص فرخة","فرخة","ربع كفتة","نص كفتة","كيلو كفتة","ربع طرب","نص طرب","كيلو طرب","ربع ممبار","نص ممبار","كيلو ممبار","فرد حمام","جوز حمام"]},
-{t:"الصواني",i:["صينية شيخ الغفر","صينية شيخ البلد","صينية العمدة","صينية الفرح"]},
-{t:"الوجبات",i:["وجبة كرسبي استريبس","وجبة بيج كرسبي استريبس","وجبة فاميلي ميكس","وجبة شاورما فراخ عربي","وجبة شيش على الفحم","فتة شاورما فراخ","ريزو استريبس"]},
-{t:"الكريب",i:["كريب بطاطس تكساس","كريب بانيه","كريب استريبس","كريب شاورما فراخ","كريب شيش على الفحم","كريب كفتة على الفحم","كريب بانيه فريش","كريب زنجر","كريب ميكس فراخ","كريب ميكس لحوم","كريب العمدة","كريب نوتيلا","كريب نوتيلا هوهوز"]},
-{t:"السندوتشات السوري",i:["سوري بطاطس","سوري بطاطس موتزريلا","سوري بانيه","سوري استريبس","سوري كفتة","سوري شاورما فراخ","سوري فليه","سوري زنجر"]},
-{t:"السندوتشات البلدي",i:["حواوشي عادي","حواوشي صاني","سندوتش كفتة","سندوتش كفتة صاني","سندوتش شيش","سندوتش طرب","سندوتش كبدة","سندوتش سجق"]},
-{t:"فرايد تشكين",i:["تشكين فليه – سنجل","تشكين فليه – دبل","تشكين استريبس – سنجل","تشكين استريبس – دبل","مستر فرايد – سنجل","مستر فرايد – دبل","دراجون فاير – سنجل","دراجون فاير – دبل"]},
-{t:"بيف برجر",i:["تشيز برجر – سنجل","تشيز برجر – دبل","سموك باربيكيو – سنجل","سموك باربيكيو – دبل","بيج جولد – سنجل","بيج جولد – دبل","بمبو برجر – سنجل","بمبو برجر – دبل"]},
-{t:"الفرايز",i:["باكت بطاطس","تشيز فرايز","تشكين فرايز","فرايز ميت"]},
-{t:"الباستا",i:["باستا شاورما فراخ","باستا تورنيو فراخ صوص أحمر","اسباجيتي بولونيز صوص أحمر","بنا أربياتا صوص أحمر","بشاميل مفروم صغير","بشاميل مفروم كبير","باستا فراخ","باستا كرانشي"]},
-{t:"الكشري",i:["علبة لوكس","علبة سوبر","علبة العمدة","علبة جامبو","ديناميت فراخ","ديناميت لحمة"]},
-{t:"الطواجن",i:["طاجن فراخ","طاجن لحمة","طاجن فراخ موتزريلا","طاجن لحمة موتزريلا"]},
-{t:"الإضافات",i:["سلطة","طحينة","عيش","خضار","رز أبيض","رز بسمتي","شوربة","ملوخية","عيش توست","تقلية","عدس","حمص","رز بلبن عادي"]}
-]};
+var MENUS={omda:[{t:"المشويات",i:[["ربع فراخ",90],["نص فرخة",170],["فرخة",340],["ربع كفتة",100],["نص كفتة",200],["كيلو كفتة",400],["ربع طرب",150],["نص طرب",280],["كيلو طرب",550],["ربع ممبار",75],["نص ممبار",140],["كيلو ممبار",260],["فرد حمام",150],["جوز حمام",300]]},
+{t:"الصواني",i:[["صينية شيخ الغفر",280],["صينية شيخ البلد",450],["صينية العمدة",800],["صينية الفرح",1100]]},
+{t:"الوجبات",i:[["وجبة كرسبي استريبس",100],["وجبة بيج كرسبي استريبس",150],["وجبة فاميلي استريبس",290],["وجبة شاورما فراخ عربي",110],["وجبة شيش على الفحم",100],["فتة شاورما فراخ",60],["ريزو استريبس",70]]},
+{t:"الكريب",i:[["كريب بطاطس تكساس",35],["كريب بانيه",50],["كريب استريبس",65],["كريب شاورما فراخ",70],["كريب شيش على الفحم",70],["كريب كفتة على الفحم",80],["كريب بانيه فريش",70],["كريب زنجر",80],["كريب ميكس فراخ",90],["كريب ميكس لحوم",85],["كريب العمدة",100],["كريب نوتيلا",60],["كريب نوتيلا هوهوز",70]]},
+{t:"السندوتشات السوري",i:[["سوري بطاطس",25],["سوري بطاطس موتزريلا",40],["سوري بانيه",40],["سوري استريبس",50],["سوري كفتة",60],["سوري شيش",60],["سوري شاورما فراخ",70],["سوري فليه",70],["سوري زنجر",70]]},
+{t:"السندوتشات البلدي",i:[["حواوشي عادي",25],["حواوشي ضاني",40],["سندوتش كفتة",25],["سندوتش كفتة ضاني",40],["سندوتش شيش",25],["سندوتش طرب",40],["سندوتش كبدة",20],["سندوتش سجق",25]]},
+{t:"فرايد تشكين",i:[["تشكين فليه – سنجل",50],["تشكين فليه – دبل",70],["تشكين استريبس – سنجل",60],["تشكين استريبس – دبل",80],["مستر فرايد – سنجل",70],["مستر فرايد – دبل",90],["دراجون فاير – سنجل",80],["دراجون فاير – دبل",100]]},
+{t:"بيف برجر",i:[["تشيز برجر – سنجل",55],["تشيز برجر – دبل",85],["سموك باربيكيو – سنجل",65],["سموك باربيكيو – دبل",95],["بيج جولد – سنجل",75],["بيج جولد – دبل",95],["بمبو برجر – سنجل",80],["بمبو برجر – دبل",100]]},
+{t:"الفرايز",i:[["باكت بطاطس",15],["تشيز فرايز",25],["تشكين فرايز",50],["فرايز ميت",50]]},
+{t:"الباستا",i:[["باستا شاورما فراخ",60],["باستا تورنيو فراخ صوص أحمر",65],["اسباجيتي بولونيز صوص أحمر",50],["بنا أربياتا صوص أحمر",40],["بشاميل مفروم صغير",30],["بشاميل مفروم كبير",50],["تجرسكو فراخ",70],["باستا كرانشي",75]]},
+{t:"الكشري",i:[["علبة لوكس",20],["علبة سوبر",25],["علبة العمدة",30],["علبة جامبو",40],["ديناميت فراخ",60],["ديناميت لحمة",55]]},
+{t:"الطواجن",i:[["طاجن فراخ",45],["طاجن لحمة",40],["طاجن فراخ موتزريلا",65],["طاجن لحمة موتزريلا",60]]},
+{t:"الإضافات",i:[["سلطة",5],["طحينة",5],["عيش",5],["خضار",10],["رز أبيض",10],["رز بسمتي",20],["شوربة",10],["ملوخية",15],["عيش توست",10],["تقلية",10],["عدس",10],["حمص",10],["رز بلبن عادي",15]]}]};
 var pkOpen={0:true};
 function pickQty(n){var it=draft.items.find(function(x){return x.n===n});return it?(parseInt(it.q,10)||1):0}
-function pickRow(n){var q=pickQty(n);return'<div class="pk'+(q?' on':'')+'" data-pn="'+esc(n)+'"><span class="nm">'+esc(n)+'</span><span class="ctl"><button type="button" class="minus" data-pick="'+esc(n)+'" data-dl="-1" aria-label="تقليل">−</button><span class="n">'+(q||0)+'</span><button type="button" class="plus" data-pick="'+esc(n)+'" data-dl="1" aria-label="زيادة">+</button></span></div>'}
+function pickRow(x){var n=x[0],q=pickQty(n);return'<div class="pk'+(q?' on':'')+'" data-pn="'+esc(n)+'"><span class="nm">'+esc(n)+'<small class="pr">'+x[1]+' ج</small></span><span class="ctl"><button type="button" class="minus" data-pick="'+esc(n)+'" data-dl="-1" aria-label="تقليل">−</button><span class="n">'+(q||0)+'</span><button type="button" class="plus" data-pick="'+esc(n)+'" data-dl="1" aria-label="زيادة">+</button></span></div>'}
 function pickerHtml(k){var m=MENUS[k];if(!m)return"";var total=0;
-var h=m.map(function(g,gi){var c=g.i.reduce(function(a,n){return a+(pickQty(n)?1:0)},0);total+=c;
+var h=m.map(function(g,gi){var c=g.i.reduce(function(a,x){return a+(pickQty(x[0])?1:0)},0);total+=c;
 return'<details class="pks" data-g="'+gi+'"'+(pkOpen[gi]?' open':'')+'><summary><span>'+g.t+'</span><span class="cnt" style="'+(c?'':'display:none')+'">'+c+'</span></summary>'+g.i.map(pickRow).join("")+'</details>'}).join("");
 return'<label>اختر من المنيو</label><div class="pkh"><span class="tag" id="pkTotal">'+(total?'تم اختيار '+total+' صنف':'لسه ما اخترتش حاجة')+'</span></div>'+h}
 function pickUpdate(n){var q=pickQty(n),rows=document.querySelectorAll(".pk");
@@ -143,7 +141,7 @@ for(var i=0;i<rows.length;i++){if(rows[i].getAttribute("data-pn")===n){rows[i].c
 var ds=document.querySelectorAll("details.pks"),total=0;
 for(var j=0;j<ds.length;j++){var c=ds[j].querySelectorAll(".pk.on").length;total+=c;var b=ds[j].querySelector(".cnt");b.textContent=c;b.style.display=c?"":"none"}
 var t=document.getElementById("pkTotal");if(t)t.textContent=total?"تم اختيار "+total+" صنف":"لسه ما اخترتش حاجة"}
-function isMenuItem(n){var m=MENUS[curRest&&curRest.k];return!!m&&m.some(function(g){return g.i.indexOf(n)>-1})}
+function isMenuItem(n){var m=MENUS[curRest&&curRest.k];return!!m&&m.some(function(g){return g.i.some(function(x){return x[0]===n})})}
 function catOf(k){for(var i=0;i<CATS.length;i++)if(CATS[i].k===k)return CATS[i]}
 var RESTS=[{k:"omda",n:"العمدة",sub:"قرية الجرايدات",time:"من 20 إلى 30 دقيقة",logo:"omda-logo.png",menu:["menu-1.jpg","menu-2.jpg"],shop:"مطعم العمدة"}];
 var curRest=RESTS[0];
