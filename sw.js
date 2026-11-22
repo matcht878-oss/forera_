@@ -1,4 +1,4 @@
-const CACHE = "forera-v8";
+const CACHE = "forera-v10";
 const CORE = ["./", "./index.html", "./offline.html", "./manifest.webmanifest", "./favicon.ico",
   "./icon-192.png", "./icon-512.png", "./maskable-512.png", "./apple-touch-icon.png"];
 
@@ -20,7 +20,7 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (!/^https?:$/.test(url.protocol)) return;
-  if (url.hostname.endsWith("openstreetmap.org")) return; // map tiles: network only
+  if (/openstreetmap\.org$|googleapis\.com$|gstatic\.com$|google\.com$/.test(url.hostname) && url.hostname !== "fonts.googleapis.com" && url.hostname !== "fonts.gstatic.com") return; // map services: network only
 
   if (req.mode === "navigate") {
     e.respondWith((async () => {
