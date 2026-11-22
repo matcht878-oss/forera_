@@ -90,6 +90,11 @@ body{background-color:var(--bg);background-image:url("data:image/svg+xml,%3Csvg 
 .lb{position:fixed;inset:0;z-index:9999;background:#000d;display:flex;align-items:center;justify-content:center}.lbs{width:100%;height:100%;overflow:auto;-webkit-overflow-scrolling:touch}.lbs img{width:230%;max-width:none;display:block}
 .lbx{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:12px;z-index:2;width:42px;height:42px;border-radius:50%;border:0;background:#fff;color:#000;font-size:32px;line-height:1;cursor:pointer}
 .btn.ghost.sm{width:auto;display:inline-block}
+
+.hlogo{display:block;width:150px;max-width:55%;height:auto;margin:0 auto 4px}header .slogan{text-align:center}
+.svc{min-height:96px;padding:14px 12px}.svc b{font-size:19px}
+.svc.hi{padding-left:56px}.svc.hi .ic{left:9px;width:38px;height:38px;border-radius:12px;padding:5px}
+.svc.cat{min-height:76px}.svc.cat b{font-size:17px}.svc.cat.hi{padding-left:56px}
 </style>
 <style>
 .pkh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:8px 0 10px}
@@ -108,6 +113,19 @@ details.pks>summary .cnt{background:var(--yellow);color:#1a1a1a;border-radius:99
 .pk .ctl button.plus{background:var(--blue);border-color:var(--blue);color:#fff}
 .pk .ctl .n{min-width:26px;text-align:center;font-weight:800;font-size:19px}
 .pk:not(.on) .ctl .n,.pk:not(.on) .ctl .minus{visibility:hidden}
+</style>
+<style>
+.vid{position:relative;width:72%;aspect-ratio:1/1;margin:-34px auto 0;border-radius:22px;overflow:hidden;background:#0a2a6b;box-shadow:0 6px 18px rgba(20,48,122,.25)}
+.vid video{width:100%;height:100%;display:block;object-fit:cover}
+.vid+.status{margin-top:12px}
+.grid{gap:10px}
+.svc{min-height:92px;padding:12px 12px}
+.svc.wide{min-height:56px}
+.svc.cat{min-height:84px}
+.svc.hi{padding-left:60px}
+.svc.hi .ic{width:44px;height:44px;left:8px;padding:5px;border-radius:13px}
+.svc b{font-size:19px}
+.svc.cat b{font-size:17px}
 </style>
 </head>
 <body>
@@ -163,9 +181,10 @@ function openInfo(){var c=cairo(),fri=c.d==="Fri",start=fri?780:600;
 if(c.m<60||c.m>=start)return{open:true,txt:"مفتوح الآن",sub:"نستقبل الطلبات حتى 1 صباحًا"};
 return{open:false,txt:"مغلق الآن",sub:fri?"نفتح اليوم الساعة 1 ظهرًا":"نفتح اليوم الساعة 10 صباحًا"}}
 function go(v,t,c){view=v;err="";if(t){draft=fresh(t);if(c)draft.cat=c}window.scrollTo(0,0);render()}
-function head(title,back){return'<header>'+(back?'<button class="back" data-go="home">→ الرئيسية</button><br>':'')+(title?'<h2>'+title+'</h2>':'<div class="logo"><i>F</i>ORERA</div><p class="slogan">سرعة .. أمان .. ثقة في خدمتكم دائمًا</p>')+'</header>'}
+function head(title,back){return'<header>'+(back?'<button class="back" data-go="home">→ الرئيسية</button><br>':'')+(title?'<h2>'+title+'</h2>':'<img class="hlogo" src="forera-logo.png" alt="فوريرا - خدمات الدليفري"><p class="slogan">سرعة .. أمان .. ثقة في خدمتكم دائمًا</p>')+'</header>'}
+function statusHtml(o){return'<div class="status" id="st"><span class="dot'+(o.open?'':' off')+'"></span><div><b>'+o.txt+'</b><small>'+o.sub+'</small></div></div>'}
 function home(){var o=openInfo();
-return head()+'<main><div class="status"><span class="dot'+(o.open?'':' off')+'"></span><div><b>'+o.txt+'</b><small>'+o.sub+'</small></div></div>'+
+return head()+'<main><div class="vid"><video autoplay muted loop playsinline preload="auto" disablepictureinpicture poster="forera-poster.jpg" aria-label="فيديو فوريرا"><source src="forera-opening.mp4" type="video/mp4"></video></div>'+statusHtml(o)+
 '<p class="sched">السبت إلى الخميس: 10 ص – 1 ص &nbsp;|&nbsp; الجمعة: 1 م – 1 ص</p>'+
 '<div class="grid"><button class="svc main hi" data-go="form" data-t="delivery"><span class="ic"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="16" cy="46" r="7" fill="#14307a"/><circle cx="48" cy="46" r="7" fill="#14307a"/><circle cx="16" cy="46" r="3" fill="#fff"/><circle cx="48" cy="46" r="3" fill="#fff"/><path d="M16 46h14l6-14h8l4 14" fill="none" stroke="#c8262d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><rect x="5" y="19" width="23" height="17" rx="3" fill="#f5b800"/><path d="M5 27h23M16.5 19v17" stroke="#7a3b1d" stroke-width="2"/><path d="M44 32l-3-8h8" fill="none" stroke="#14307a" stroke-width="4" stroke-linecap="round"/></svg></span><b>توصيل طلب</b><span>نوصّل طلبك لحد باب البيت</span></button>'+
 '<button class="svc hi" data-go="form" data-t="buy"><span class="ic"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 22h40l-3 32H15z" fill="#1f4bb8"/><path d="M22 22v-4a10 10 0 0 1 20 0v4" fill="none" stroke="#f5b800" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="38" r="8" fill="#f5b800"/><path d="M28.5 38l2.5 2.5 5-5" stroke="#14307a" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>اطلب حاجة</b><span>نشتريها لك ونوصلها</span></button>'+
@@ -264,7 +283,7 @@ function owners(){var sent=draft&&draft.sent;
 return head("لأصحاب المطاعم",1)+'<main><div class="card"><p style="margin-top:0">فوريرا لكل خدمات الدليفري: مطاعم، سوبر ماركت، أدوية، ومشاوير. سجّل محلك وهنراجع طلبك ونتواصل معاك.</p></div>'+
 (sent?'<div class="card done"><b>وصل طلب الانضمام</b><p>هنتواصل معاك بعد المراجعة.</p></div>'+joinWa():
 (err?'<div class="err">'+err+'</div>':'')+'<div class="card"><label>اسم المحل</label><input id="s1"><label>اسم المسؤول</label><input id="s2"><label>الموبايل</label><input id="s3" inputmode="numeric" maxlength="11"><label>النشاط</label><select id="s4"><option>مطعم</option><option>سوبر ماركت</option><option>صيدلية</option><option>أخرى</option></select><label>ساعات العمل</label><input id="s5" placeholder="مثال: من 10 ص إلى 12 ليلًا"></div><button class="btn y" data-join>إرسال طلب الانضمام</button>')+'</main>'}
-function render(){var h={home:home,form:function(){return draft?form():home()},orders:ordersView,rests:restsView,menu:menuView,owners:owners,done:done}[view]();document.getElementById("app").innerHTML=h;initMaps()}
+function render(){var h={home:home,form:function(){return draft?form():home()},orders:ordersView,rests:restsView,menu:menuView,owners:owners,done:done}[view]();document.getElementById("app").innerHTML=h;initMaps();var vd=document.querySelector(".vid video");if(vd){vd.muted=true;vd.defaultMuted=true;if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches){vd.pause()}else{var pr=vd.play();if(pr&&pr.catch)pr.catch(function(){})}}}
 document.addEventListener("click",function(e){var im=e.target.closest("img.menuimg");if(im){openLight(im.getAttribute("src"));return}var t=e.target.closest("button");if(!t)return;var D=t.dataset;
 if(D.pick!==undefined){var pn=D.pick,dl=+D.dl,pit=draft.items.find(function(x){return x.n===pn});
 if(!pit){if(dl>0)draft.items.push({n:pn,q:"1"})}else{var nq=(parseInt(pit.q,10)||1)+dl;if(nq<=0){pit.n="";pit.h=1;pit.q="1"}else pit.q=String(nq)}
@@ -289,7 +308,7 @@ var js=load("fo_join",[]);js.push({shop:v[0],owner:v[1],phone:v[2],at:Date.now()
 document.addEventListener("toggle",function(e){var d=e.target;if(d.classList&&d.classList.contains("pks"))pkOpen[d.getAttribute("data-g")]=d.open},true);
 document.addEventListener("input",function(e){var t=e.target,D=t.dataset;if(!draft)return;
 if(D.k){draft[D.k]=t.value;if(D.k==="shop")render()}else if(D.i){draft.items[D.i][D.f]=t.value}});
-render();setInterval(function(){if(view==="home")render()},60000);
+render();setInterval(function(){var e=document.getElementById("st");if(view==="home"&&e)e.outerHTML=statusHtml(openInfo())},60000);
 </script>
 <script>
 (function(){try{var t=new URLSearchParams(location.search).get("s");if(t&&/^(delivery|buy|ride)$/.test(t)&&typeof go==="function")go("form",t)}catch(e){}})();
