@@ -78,6 +78,7 @@ background:linear-gradient(90deg,transparent 49%,#c9d3ee 49% 51%,transparent 51%
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>.map{z-index:0;isolation:isolate;height:240px;cursor:grab}.map em{z-index:500}.maphint{font-size:12px;color:#46517a;margin:4px 0 0}.leaflet-container{font-family:inherit}.call{flex-direction:row;gap:10px}.call .grp{flex:1;display:flex;flex-direction:column;gap:4px}.call .num{font-size:12px;color:var(--mute);text-align:center;direction:ltr}.call .acts{display:flex;gap:6px}.call .acts a{flex:1;padding:9px 4px;font-size:14px;direction:rtl}.call .acts a.wa{background:var(--ok)}.app{padding-bottom:104px}
+.sec{font-size:17px;margin:22px 2px 0;color:var(--ink)}.svc.cat{min-height:84px}.svc.cat b{color:var(--blue2)}
 </style>
 </head>
 <body>
@@ -85,7 +86,9 @@ background:linear-gradient(90deg,transparent 49%,#c9d3ee 49% 51%,transparent 51%
 <div class="call"><div class="grp"><span class="num">01142042670</span><div class="acts"><a class="wa" href="https://wa.me/201142042670?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%B9%D8%A7%D9%8A%D8%B2%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%85%D9%86%20%D9%81%D9%88%D8%B1%D9%8A%D8%B1%D8%A7" target="_blank" rel="noopener">واتساب</a><a href="tel:01142042670">اتصال</a></div></div><div class="grp"><span class="num">01033048158</span><div class="acts"><a class="wa" href="https://wa.me/201033048158?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%B9%D8%A7%D9%8A%D8%B2%20%D8%A3%D8%B7%D9%84%D8%A8%20%D9%85%D9%86%20%D9%81%D9%88%D8%B1%D9%8A%D8%B1%D8%A7" target="_blank" rel="noopener">واتساب</a><a href="tel:01033048158">اتصال</a></div></div></div>
 <script>
 var PHONES=["01142042670","01033048158"],MAXH=3;
-var SHOPS=["مطعم الأمل","حلواني السعادة","سوبر ماركت النور","صيدلية الشفاء"];
+var CATS=[{k:"rest",n:"مطاعم",s:"اطلب من مطعمك المفضل",shops:["مطعم الأمل","حلواني السعادة"]},{k:"pharm",n:"صيدليات",s:"أدوية ومستلزمات",shops:["صيدلية الشفاء"]},{k:"super",n:"سوبر ماركت",s:"طلبات البيت اليومية",shops:["سوبر ماركت النور"]},{k:"perf",n:"اكسسوارات وعطور",s:"هدايا وعطور وإكسسوارات",shops:[]}];
+function catOf(k){for(var i=0;i<CATS.length;i++)if(CATS[i].k===k)return CATS[i]}
+var SHOPS=CATS.reduce(function(a,c){return a.concat(c.shops)},[]);
 var STAT={buy:["جديد","تم القبول","المندوب في الطريق للشراء","تم الاستلام","في الطريق إليك","تم التسليم"],
 delivery:["جديد","تم القبول","المندوب في الطريق للاستلام","في الطريق إليك","تم التسليم"],
 ride:["جديد","تم القبول","المندوب في الطريق إليك","في الطريق للوجهة","تم الوصول"]};
@@ -100,7 +103,7 @@ p.forEach(function(x){o[x.type]=x.value});return{d:o.weekday,m:(+o.hour%24)*60+ 
 function openInfo(){var c=cairo(),fri=c.d==="Fri",start=fri?780:600;
 if(c.m<60||c.m>=start)return{open:true,txt:"مفتوح الآن",sub:"نستقبل الطلبات حتى 1 صباحًا"};
 return{open:false,txt:"مغلق الآن",sub:fri?"نفتح اليوم الساعة 1 ظهرًا":"نفتح اليوم الساعة 10 صباحًا"}}
-function go(v,t){view=v;err="";if(t)draft=fresh(t);window.scrollTo(0,0);render()}
+function go(v,t,c){view=v;err="";if(t){draft=fresh(t);if(c)draft.cat=c}window.scrollTo(0,0);render()}
 function head(title,back){return'<header>'+(back?'<button class="back" data-go="home">→ الرئيسية</button><br>':'')+(title?'<h2>'+title+'</h2>':'<div class="logo"><i>F</i>ORERA</div><p class="slogan">سرعة .. أمان .. ثقة في خدمتكم دائمًا</p>')+'</header>'}
 function home(){var o=openInfo();
 return head()+'<main><div class="status"><span class="dot'+(o.open?'':' off')+'"></span><div><b>'+o.txt+'</b><small>'+o.sub+'</small></div></div>'+
@@ -109,7 +112,8 @@ return head()+'<main><div class="status"><span class="dot'+(o.open?'':' off')+'"
 '<button class="svc" data-go="form" data-t="buy"><b>اطلب حاجة</b><span>نشتريها لك ونوصلها</span></button>'+
 '<button class="svc red" data-go="form" data-t="ride"><b>مشوار</b><span>توكتوك أو موتوسيكل</span></button>'+
 '<button class="svc" data-go="orders"><b>طلباتي</b><span>'+orders.length+' طلب على هذا الجهاز</span></button>'+
-'<button class="svc wide" data-go="owners"><b>لأصحاب المطاعم</b><span>انضم لفوريرا</span></button></div></main>'}
+'<button class="svc wide" data-go="owners"><b>لأصحاب المطاعم</b><span>انضم لفوريرا</span></button></div>'+
+'<h2 class="sec">اطلب من الأقسام</h2><div class="grid">'+CATS.map(function(c){return'<button class="svc cat" data-go="form" data-t="buy" data-cat="'+c.k+'"><b>'+c.n+'</b><span>'+c.s+'</span></button>'}).join("")+'</div></main>'}
 function mapBox(id,lbl,cls){var p=draft.pts[id];
 return'<label>'+lbl+'</label><div class="map" data-mapid="'+id+'" data-mapcls="'+(cls||"")+'" role="application" aria-label="'+lbl+'"></div><div class="maphint">اضغط على الخريطة لتحديد المكان</div>'+
 '<button class="btn ghost sm" style="margin-top:8px" data-loc="'+id+'">موقعي الحالي</button>'+(p?' <span class="tag">تم التحديد</span>':'')}
@@ -130,9 +134,9 @@ if(d.step===1)return review();
 if(t==="delivery"){b=ident()+'<label>إيه اللي هيتوصّل؟</label><textarea data-k="desc" placeholder="مثال: أوردر من مطعم، طلب منزل">'+esc(d.desc)+'</textarea>'+mapBox("to","عنوان التوصيل على الخريطة")+'<label>العنوان بالتفصيل</label><input data-k="addr" placeholder="الشارع، أقرب معلم، رقم العمارة" value="'+esc(d.addr)+'">'}
 if(t==="buy"){var quick=["سندوتش","بيبسي","أدوية","سوبر ماركت"].map(function(q){return'<button class="chip" data-quick="'+q+'">+ '+q+'</button>'}).join("");
 var its=d.items.map(function(it,i){return'<div class="row" style="margin-bottom:8px"><input data-i="'+i+'" data-f="n" placeholder="اسم الصنف" value="'+esc(it.n)+'"><input class="q" data-i="'+i+'" data-f="q" inputmode="numeric" aria-label="الكمية" value="'+esc(it.q)+'"></div>'}).join("");
-var opts='<option value="">اختر المطعم أو المحل</option>'+SHOPS.map(function(s){return'<option'+(d.shop===s?' selected':'')+'>'+s+'</option>'}).join("")+'<option value="_other"'+(d.shop==="_other"?' selected':'')+'>اسم آخر…</option>';
+var cat=catOf(d.cat),list=cat?cat.shops:SHOPS,opts='<option value="">'+(cat?"اختر من "+cat.n:"اختر المطعم أو المحل")+'</option>'+list.map(function(s){return'<option'+(d.shop===s?' selected':'')+'>'+s+'</option>'}).join("")+'<option value="_other"'+(d.shop==="_other"?' selected':'')+'>اسم آخر…</option>';
 b=ident()+'<label>الأصناف</label><div class="chips">'+quick+'</div>'+its+'<button class="btn ghost sm" data-add>إضافة صنف</button>'+
-'<label>نشتري من فين؟</label><select data-k="shop">'+opts+'</select>'+(d.shop==="_other"?'<input style="margin-top:8px" data-k="shopFree" placeholder="اكتب اسم المطعم أو المحل" value="'+esc(d.shopFree)+'">':'')+
+'<label>'+(cat?"نشتري من أي "+cat.n+"؟":"نشتري من فين؟")+'</label><select data-k="shop">'+opts+'</select>'+(d.shop==="_other"?'<input style="margin-top:8px" data-k="shopFree" placeholder="اكتب اسم المطعم أو المحل" value="'+esc(d.shopFree)+'">':'')+
 mapBox("from","مكان الشراء على الخريطة","b")+mapBox("to","عنوان التوصيل على الخريطة")+'<label>العنوان بالتفصيل</label><input data-k="addr" value="'+esc(d.addr)+'">'}
 if(t==="ride"){b=ident()+'<label>المركبة</label><div class="chips">'+["توكتوك","موتوسيكل"].map(function(v){return'<button class="chip'+(d.veh===v?' on':'')+'" data-veh="'+v+'">'+v+'</button>'}).join("")+'</div>'+
 mapBox("from","نقطة الركوب","b")+mapBox("to","نقطة الوصول")+'<label>ملاحظات</label><textarea data-k="notes" placeholder="عدد الركاب…">'+esc(d.notes)+'</textarea>'}
@@ -150,7 +154,7 @@ if(h>=MAXH)return"وصلت للحد الأقصى ("+MAXH+" طلبات في ال�
 function pt(p){return p?p.lat.toFixed(4)+" , "+p.lng.toFixed(4):"—"}
 function review(){var d=draft,o=openInfo(),r='<dt>الاسم</dt><dd>'+esc(d.name)+'</dd><dt>الموبايل</dt><dd>'+esc(d.phone)+'</dd>';
 if(d.type==="delivery")r+='<dt>الطلب</dt><dd>'+esc(d.desc)+'</dd>';
-if(d.type==="buy"){r+='<dt>الأصناف</dt><dd>'+d.items.filter(function(i){return i.n.trim()}).map(function(i){return esc(i.q)+" × "+esc(i.n)}).join("، ")+'</dd><dt>الشراء من</dt><dd>'+esc(shopName(d))+'</dd>'}
+if(d.type==="buy"){r+='<dt>الأصناف</dt><dd>'+d.items.filter(function(i){return i.n.trim()}).map(function(i){return esc(i.q)+" × "+esc(i.n)}).join("، ")+'</dd><dt>الشراء من</dt><dd>'+esc(shopName(d))+(catOf(d.cat)?" ("+catOf(d.cat).n+")":"")+'</dd>'}
 if(d.type==="ride")r+='<dt>المركبة</dt><dd>'+d.veh+'</dd><dt>الركوب</dt><dd>'+pt(d.pts.from)+'</dd>';
 r+='<dt>'+(d.type==="ride"?"الوصول":"التوصيل إلى")+'</dt><dd>'+pt(d.pts.to)+(d.addr?' – '+esc(d.addr):'')+'</dd>';
 if(d.notes)r+='<dt>ملاحظات</dt><dd>'+esc(d.notes)+'</dd>';
@@ -158,7 +162,7 @@ return head("مراجعة الطلب",0)+'<main>'+(o.open?'':'<div class="note">
 function gl(p){return p?"https://maps.google.com/?q="+p.lat.toFixed(6)+","+p.lng.toFixed(6):"—"}
 function waMsg(o){var d=o.data||{},L2=["طلب فوريرا رقم "+o.no,"الخدمة: "+TITLE[o.type],"الاسم: "+o.name,"الموبايل: "+o.phone];
 if(o.type==="delivery")L2.push("الطلب: "+(d.desc||""));
-if(o.type==="buy"){L2.push("الأصناف: "+(d.items||[]).filter(function(i){return i.n.trim()}).map(function(i){return i.q+" × "+i.n}).join("، "));L2.push("الشراء من: "+shopName(d));L2.push("موقع الشراء: "+gl(d.pts&&d.pts.from))}
+if(o.type==="buy"){L2.push("الأصناف: "+(d.items||[]).filter(function(i){return i.n.trim()}).map(function(i){return i.q+" × "+i.n}).join("، "));L2.push("الشراء من: "+shopName(d)+(catOf(d.cat)?" ("+catOf(d.cat).n+")":""));L2.push("موقع الشراء: "+gl(d.pts&&d.pts.from))}
 if(o.type==="ride"){L2.push("المركبة: "+(d.veh||""));L2.push("نقطة الركوب: "+gl(d.pts&&d.pts.from))}
 L2.push((o.type==="ride"?"نقطة الوصول: ":"موقع التوصيل: ")+gl(d.pts&&d.pts.to));
 if(d.addr)L2.push("العنوان: "+d.addr);if(d.notes)L2.push("ملاحظات: "+d.notes);
@@ -180,7 +184,7 @@ return head("لأصحاب المطاعم",1)+'<main><div class="card"><p style="
 (err?'<div class="err">'+err+'</div>':'')+'<div class="card"><label>اسم المحل</label><input id="s1"><label>اسم المسؤول</label><input id="s2"><label>الموبايل</label><input id="s3" inputmode="numeric" maxlength="11"><label>النشاط</label><select id="s4"><option>مطعم</option><option>سوبر ماركت</option><option>صيدلية</option><option>أخرى</option></select><label>ساعات العمل</label><input id="s5" placeholder="مثال: من 10 ص إلى 12 ليلًا"></div><button class="btn y" data-join>إرسال طلب الانضمام</button>')+'</main>'}
 function render(){var h={home:home,form:function(){return draft?form():home()},orders:ordersView,owners:owners,done:done}[view]();document.getElementById("app").innerHTML=h;initMaps()}
 document.addEventListener("click",function(e){var t=e.target.closest("button");if(!t)return;var D=t.dataset;
-if(D.go){if(D.go==="owners")draft={sent:false};go(D.go,D.t);return}
+if(D.go){if(D.go==="owners")draft={sent:false};go(D.go,D.t,D.cat);return}
 if(D.quick){var f=draft.items.find(function(i){return!i.n.trim()});if(f)f.n=D.quick;else draft.items.push({n:D.quick,q:"1"});render();return}
 if(D.add!==undefined){draft.items.push({n:"",q:"1"});render();return}
 if(D.veh){draft.veh=D.veh;render();return}
