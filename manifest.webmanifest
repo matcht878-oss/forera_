@@ -11,7 +11,7 @@
     "minimal-ui"
   ],
   "orientation": "portrait",
-  "background_color": "#14307a",
+  "background_color": "#010101",
   "theme_color": "#14307a",
   "lang": "ar",
   "dir": "rtl",
