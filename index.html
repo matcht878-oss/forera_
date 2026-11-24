@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#14307a">
 <meta name="description" content="فوريرا للدليفري - توصيل وشراء ومشاوير">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="فوريرا">
@@ -79,6 +80,9 @@ background:linear-gradient(90deg,transparent 49%,#c9d3ee 49% 51%,transparent 51%
 .secb.big i{font-size:34px}.secb.big em{position:absolute;top:8px;left:8px;font-style:normal;background:var(--yellow);color:#1a1a1a;border-radius:999px;font-size:14px;min-width:24px;padding:0 8px;line-height:24px}
 .pkl{padding:0;overflow:hidden}.pkl .pk:first-child{border-top:0}
 .rhead img,.rlogo>img{object-fit:cover}.shthumb{width:84px;height:84px;border-radius:50%}
+.inst{display:flex;align-items:center;gap:10px;padding:12px 40px 12px 12px;margin:0 0 12px;position:relative;border:1.5px solid var(--yellow)}
+.inst>div{flex:1;display:flex;flex-direction:column;gap:2px}.inst b{font-size:16px}.inst span{font-size:13px;opacity:.8}.inst .insth{flex:1;font-size:13px}.inst .btn{width:auto;white-space:nowrap}
+.instx{position:absolute;top:4px;left:6px;background:none;border:0;font-size:22px;line-height:1;color:inherit;opacity:.6;padding:4px 8px}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -232,8 +236,15 @@ return{open:false,txt:"مغلق الآن",sub:fri?"نفتح اليوم السا�
 function go(v,t,c){view=v;err="";if(t){draft=fresh(t);if(c)draft.cat=c}window.scrollTo(0,0);render()}
 function head(title,back){return'<header>'+(back?'<button class="back" data-go="home">→ الرئيسية</button><br>':'')+(title?'<h2>'+title+'</h2>':'<img class="hlogo" src="forera-logo-t.png" alt="فوريرا للدليفري"><p class="slogan">سرعة .. أمان .. ثقة في خدمتكم دائمًا</p>')+'</header>'}
 function statusHtml(o){return'<div class="status" id="st"><span class="dot'+(o.open?'':' off')+'"></span><div><b>'+o.txt+'</b><small>'+o.sub+'</small></div></div>'}
+var deferredInstall=null,instHide=false;
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredInstall=e;if(view==="home")render()});
+window.addEventListener("appinstalled",function(){deferredInstall=null;instHide=true;render()});
+function isStandalone(){return !!((window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true)}
+function installHtml(){if(instHide||isStandalone())return"";var ios=/iphone|ipad|ipod/i.test(navigator.userAgent||"");
+var b=deferredInstall?'<button class="btn y sm" data-install>تثبيت التطبيق</button>':'<span class="insth">'+(ios?'من زر المشاركة اختار «إضافة إلى الشاشة الرئيسية»':'من قائمة ⋮ في المتصفح اختار «تثبيت التطبيق»')+'</span>';
+return'<div class="card inst"><div><b>ثبّت تطبيق فوريرا</b><span>يفتح لوحده بدون شريط المتصفح</span></div>'+b+'<button class="instx" data-noinst aria-label="إغلاق">×</button></div>'}
 function home(){var o=openInfo();
-return head()+'<main>'+statusHtml(o)+
+return head()+'<main>'+statusHtml(o)+installHtml()+
 '<p class="sched">السبت إلى الخميس: 10 ص – 1 ص &nbsp;|&nbsp; الجمعة: 1 م – 1 ص</p>'+
 '<div class="grid"><button class="svc main hi" data-go="form" data-t="delivery"><span class="ic"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="16" cy="46" r="7" fill="#14307a"/><circle cx="48" cy="46" r="7" fill="#14307a"/><circle cx="16" cy="46" r="3" fill="#fff"/><circle cx="48" cy="46" r="3" fill="#fff"/><path d="M16 46h14l6-14h8l4 14" fill="none" stroke="#c8262d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><rect x="5" y="19" width="23" height="17" rx="3" fill="#f5b800"/><path d="M5 27h23M16.5 19v17" stroke="#7a3b1d" stroke-width="2"/><path d="M44 32l-3-8h8" fill="none" stroke="#14307a" stroke-width="4" stroke-linecap="round"/></svg></span><b>توصيل طلب</b><span>نوصّل طلبك لحد باب البيت</span></button>'+
 '<button class="svc hi" data-go="form" data-t="buy"><span class="ic"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 22h40l-3 32H15z" fill="#1f4bb8"/><path d="M22 22v-4a10 10 0 0 1 20 0v4" fill="none" stroke="#f5b800" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="38" r="8" fill="#f5b800"/><path d="M28.5 38l2.5 2.5 5-5" stroke="#14307a" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>اطلب حاجة</b><span>نشتريها لك ونوصلها</span></button>'+
@@ -368,6 +379,8 @@ if(D.pick!==undefined){var pn=D.pick,dl=+D.dl,pit=draft.items.find(function(x){r
 if(!pit){if(dl>0)draft.items.push({n:pn,q:"1"})}else{var nq=(parseInt(pit.q,10)||1)+dl;if(nq<=0){pit.n="";pit.h=1;pit.q="1"}else pit.q=String(nq)}
 pickUpdate(pn);return}
 if(D.sec!==undefined){pkSec=+D.sec;view="sec";err="";window.scrollTo(0,0);render();return}
+if(D.install!==undefined){if(deferredInstall){deferredInstall.prompt();deferredInstall.userChoice.then(function(){deferredInstall=null;render()})}return}
+if(D.noinst!==undefined){instHide=true;render();return}
 if(D.shop){curShop=PAGES[D.shop]||curShop;view="shop";err="";window.scrollTo(0,0);render();return}
 if(D.cont!==undefined){if(!draft||draft.type!=="buy")return;view="form";err="";draft.step=0;window.scrollTo(0,0);render();return}
 if(D.oshop!==undefined){go("form","buy",curShop.cat);draft.shop=curShop.n;render();return}
