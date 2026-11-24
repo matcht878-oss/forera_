@@ -1,5 +1,5 @@
-const CACHE = "forera-v16";
-const CORE = ["./", "./index.html", "./offline.html", "./manifest.webmanifest", "./favicon.ico", "./forera-logo.png", "./eshraq-logo.png", "./zaeem-logo.png", "./sundus-logo.png", "./dimashqi-logo.png",
+const CACHE = "forera-v17";
+const CORE = ["./", "./index.html", "./offline.html", "./manifest.webmanifest", "./favicon.ico", "./forera-logo.png", "./forera-logo-t.png", "./eshraq-logo.png", "./zaeem-logo.png", "./sundus-logo.png", "./dimashqi-logo.png",
   "./icon-192.png", "./icon-512.png", "./maskable-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", e => {

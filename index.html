@@ -127,6 +127,9 @@ details.pks>summary .cnt{background:var(--yellow);color:#1a1a1a;border-radius:99
 .secs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}.secs span{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 14px 4px 10px;font-size:15px;font-weight:500}.secs i{font-style:normal;font-size:18px;line-height:1}
 .gh{margin:18px 2px 8px;font-size:20px}.gimg{display:block;width:100%;height:auto;border-radius:16px;border:1px solid var(--line);cursor:zoom-in;background:var(--card)}
 .lb.ph .lbs{display:flex;align-items:center;justify-content:center}.lb.ph .lbs img{width:auto;max-width:100%;max-height:100%;object-fit:contain}
+.imgs{border:1.5px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden;margin-top:8px}.imgs>summary{cursor:pointer;padding:13px 14px;font-weight:800;font-size:19px}
+.hlogo{display:block;width:min(46vw,175px);height:auto;margin:-6px auto 0}header .slogan{text-align:center}
+.secb{display:flex;align-items:center;gap:6px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:4px 14px 4px 10px;font:inherit;font-size:15px;font-weight:500;cursor:pointer}.secb i{font-style:normal;font-size:18px;line-height:1}
 #splash{position:fixed;inset:0;z-index:99999;background:#010101;display:flex;align-items:center;justify-content:center;transition:opacity .5s ease}
 #splash img{display:block;width:min(100vw,100vh);height:min(100vw,100vh);object-fit:contain;animation:spl .9s ease-out both}
 #splash.out{opacity:0;pointer-events:none}
@@ -196,7 +199,7 @@ function pickUpdate(n){var q=pickQty(n),rows=document.querySelectorAll(".pk");
 for(var i=0;i<rows.length;i++){if(rows[i].getAttribute("data-pn")===n){rows[i].className="pk"+(q?" on":"");rows[i].querySelector(".n").textContent=q}}
 var ds=document.querySelectorAll("details.pks"),total=0;
 for(var j=0;j<ds.length;j++){var c=ds[j].querySelectorAll(".pk.on").length;total+=c;var b=ds[j].querySelector(".cnt");b.textContent=c;b.style.display=c?"":"none"}
-var t=document.getElementById("pkTotal");if(t)t.textContent=total?"تم اختيار "+total+" صنف":"لسه ما اخترتش حاجة"}
+var go2=document.getElementById("pkGo");if(go2)go2.textContent=total?"متابعة الطلب ("+total+" صنف)":"متابعة الطلب";var t=document.getElementById("pkTotal");if(t)t.textContent=total?"تم اختيار "+total+" صنف":"لسه ما اخترتش حاجة"}
 function isMenuItem(n){var r=restByShop(draft&&draft.shop),m=r&&MENUS[r.k];return!!m&&m.some(function(g){return g.i.some(function(x){return x[0]===n})})}
 function catOf(k){for(var i=0;i<CATS.length;i++)if(CATS[i].k===k)return CATS[i]}
 var RESTS=[{k:"zaeem",n:"الزعيم",sub:"طهطا – ميدان الوزات",time:"من 20 إلى 30 دقيقة",logo:"zaeem-logo.png",menu:["zaeem-1.jpg","zaeem-2.jpg"],shop:"مطعم الزعيم"},
@@ -222,7 +225,7 @@ function openInfo(){var c=cairo(),fri=c.d==="Fri",start=fri?780:600;
 if(c.m<60||c.m>=start)return{open:true,txt:"مفتوح الآن",sub:"نستقبل الطلبات حتى 1 صباحًا"};
 return{open:false,txt:"مغلق الآن",sub:fri?"نفتح اليوم الساعة 1 ظهرًا":"نفتح اليوم الساعة 10 صباحًا"}}
 function go(v,t,c){view=v;err="";if(t){draft=fresh(t);if(c)draft.cat=c}window.scrollTo(0,0);render()}
-function head(title,back){return'<header>'+(back?'<button class="back" data-go="home">→ الرئيسية</button><br>':'')+(title?'<h2>'+title+'</h2>':'<div class="logo"><i>F</i>ORERA</div><p class="slogan">سرعة .. أمان .. ثقة في خدمتكم دائمًا</p>')+'</header>'}
+function head(title,back){return'<header>'+(back?'<button class="back" data-go="home">→ الرئيسية</button><br>':'')+(title?'<h2>'+title+'</h2>':'<img class="hlogo" src="forera-logo-t.png" alt="فوريرا للدليفري"><p class="slogan">سرعة .. أمان .. ثقة في خدمتكم دائمًا</p>')+'</header>'}
 function statusHtml(o){return'<div class="status" id="st"><span class="dot'+(o.open?'':' off')+'"></span><div><b>'+o.txt+'</b><small>'+o.sub+'</small></div></div>'}
 function home(){var o=openInfo();
 return head()+'<main>'+statusHtml(o)+
@@ -318,12 +321,14 @@ p.secs.map(function(x){return'<h3 class="gh">'+x.ic+' '+x.t+'</h3><img class="gi
 '<div class="grid" style="margin:16px 0 6px"><a class="btn ghost" href="tel:'+p.phone+'">اتصال بالمحل</a><a class="btn ghost" href="https://wa.me/2'+p.phone+'" target="_blank" rel="noopener">واتساب</a></div>'+
 '<button class="btn y" style="margin:6px 0 14px" data-oshop>اطلب من '+p.n+'</button></main>'}
 function restsView(){return head("مطاعم",1)+'<main>'+RESTS.map(function(r){return'<button class="rest" data-rest="'+r.k+'"><span class="rlogo"><img src="'+r.logo+'" alt="'+r.n+'"><span class="mbadge">'+MENU_SVG+'</span><span class="rtime">'+r.time+'</span></span><span class="rinfo"><b>'+r.n+'</b><span>'+r.sub+'</span><span class="rcta">عرض المنيو والطلب ←</span>'+secIcons(r.k,4)+'</span></button>'}).join("")+'</main>'}
-function menuView(){var r=curRest;return head("منيو "+r.n,1)+'<main><button class="btn ghost sm" style="margin-bottom:10px" data-go="rests">→ كل المطاعم</button>'+
+function menuView(){var r=curRest,m=MENUS[r.k]||[],has=m.length>0,tot=0;
+if(has&&draft)m.forEach(function(g){g.i.forEach(function(x){if(pickQty(x[0]))tot++})});
+return head("منيو "+r.n,1)+'<main><button class="btn ghost sm" style="margin-bottom:10px" data-go="rests">→ كل المطاعم</button>'+
 '<div class="card rhead"><img src="'+r.logo+'" alt="'+r.n+'"><div><b>'+r.n+'</b><span>'+r.sub+'</span><span class="tag">'+r.time+'</span></div></div>'+
-'<button class="btn" style="margin-bottom:14px" data-orest="'+r.k+'">اطلب من '+r.n+'</button>'+
-'<div class="secs">'+(MENUS[r.k]||[]).map(function(g){return'<span><i>'+secIc(g.t)+'</i>'+g.t+'</span>'}).join("")+'</div><p class="maphint">اضغط على صورة المنيو لتكبيرها</p>'+
-r.menu.map(function(m,i){return'<img class="menuimg" src="'+m+'" alt="منيو '+r.n+' '+(i+1)+'" loading="lazy">'}).join("")+
-'<button class="btn" style="margin:6px 0 14px" data-orest="'+r.k+'">اطلب من '+r.n+'</button></main>'}
+(has?'<h3 class="gh" style="margin-top:4px">اختار القسم</h3><div class="secs">'+m.map(function(g,gi){return'<button type="button" class="secb" data-sec="'+r.k+'|'+gi+'"><i>'+secIc(g.t)+'</i>'+g.t+'</button>'}).join("")+'</div>'+pickerHtml(r.k)+
+'<button class="btn y" id="pkGo" style="margin:10px 0 14px" data-cont>'+(tot?'متابعة الطلب ('+tot+' صنف)':'متابعة الطلب')+'</button>':
+'<button class="btn" style="margin-bottom:14px" data-orest="'+r.k+'">اطلب من '+r.n+'</button>')+
+(r.menu.length?'<details class="imgs"><summary>صور المنيو</summary><div style="padding:0 12px 4px"><p class="maphint">اضغط على صورة المنيو لتكبيرها</p>'+r.menu.map(function(mm,i){return'<img class="menuimg" src="'+mm+'" alt="منيو '+r.n+' '+(i+1)+'" loading="lazy">'}).join("")+'</div></details>':'')+'</main>'}
 function openLight(src,ph){var d=document.createElement("div");d.className=ph?"lb ph":"lb";d.innerHTML='<button class="lbx" aria-label="إغلاق">×</button><div class="lbs"><img src="'+src+'" alt=""></div>';d.onclick=function(e){if(e.target.className==="lbx"||e.target===d)d.remove()};document.body.appendChild(d)}
 function ordersView(){var l=orders.slice().reverse().map(function(o){var s=STAT[o.type];
 return'<div class="card"><div class="ohead"><b>#'+o.no+' – '+TITLE[o.type]+'</b><span class="tag">'+s[o.st]+'</span></div><ul class="steps">'+s.map(function(x,i){return'<li class="'+(i<o.st?'d':i===o.st?'c':'')+'">'+x+'</li>'}).join("")+'</ul>'+
@@ -341,8 +346,10 @@ document.addEventListener("click",function(e){var im=e.target.closest("img.menui
 if(D.pick!==undefined){var pn=D.pick,dl=+D.dl,pit=draft.items.find(function(x){return x.n===pn});
 if(!pit){if(dl>0)draft.items.push({n:pn,q:"1"})}else{var nq=(parseInt(pit.q,10)||1)+dl;if(nq<=0){pit.n="";pit.h=1;pit.q="1"}else pit.q=String(nq)}
 pickUpdate(pn);return}
+if(D.sec){var dt=document.querySelector('details.pks[data-g="'+D.sec+'"]');if(dt){dt.open=true;pkOpen[D.sec]=true;dt.scrollIntoView({behavior:"smooth",block:"start"})}return}
+if(D.cont!==undefined){if(!draft||draft.type!=="buy")return;view="form";err="";draft.step=0;window.scrollTo(0,0);render();return}
 if(D.oshop!==undefined){go("form","buy","perf");draft.shop=SHOPPAGE.n;render();return}
-if(D.rest){curRest=restOf(D.rest)||curRest;view="menu";err="";window.scrollTo(0,0);render();return}
+if(D.rest){curRest=restOf(D.rest)||curRest;if(!draft||draft.type!=="buy"||draft.shop!==curRest.shop){draft=fresh("buy");draft.cat="rest";draft.shop=curRest.shop}view="menu";err="";window.scrollTo(0,0);render();return}
 if(D.orest){curRest=restOf(D.orest)||curRest;go("form","buy","rest");draft.shop=curRest.shop;render();return}
 if(D.go){if(D.go==="owners")draft={sent:false};go(D.go,D.t,D.cat);return}
 if(D.quick){var f=draft.items.find(function(i){return!i.n.trim()});if(f)f.n=D.quick;else draft.items.push({n:D.quick,q:"1"});render();return}
