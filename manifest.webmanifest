@@ -118,7 +118,7 @@
     {
       "name": "مشوار",
       "short_name": "مشوار",
-      "description": "توكتوك أو موتوسيكل",
+      "description": "موتوسيكل سريع لأي مكان",
       "url": "./index.html?s=ride&source=shortcut",
       "icons": [
         {

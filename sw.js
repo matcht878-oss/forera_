@@ -1,4 +1,4 @@
-const CACHE = "forera-v23";
+const CACHE = "forera-v26";
 const CORE = ["./", "./index.html", "./offline.html", "./manifest.webmanifest", "./favicon.ico", "./forera-logo.png", "./forera-logo-t.png", "./eshraq-logo.png", "./zaeem-logo.png", "./sundus-logo.png", "./dimashqi-logo.png",
   "./icon-192.png", "./icon-512.png", "./maskable-512.png", "./apple-touch-icon.png"];
 
